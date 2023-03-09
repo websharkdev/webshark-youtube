@@ -1,0 +1,56 @@
+{
+  "name": "react-nextjs-startpack",
+  "author": {
+    "email": "alexey.bortnytskyi@gmail.com",
+    "name": "Alexey Bortnytskyi | WebShark.dev"
+  },
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "format": "prettier --write \"**/*.+(ts|tsx|css|sass)\"",
+    "lint": "eslint --fix \"**/*.+(ts|tsx)\""
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@motionone/utils": "^10.15.1",
+    "@mui/icons-material": "^5.11.11",
+    "@mui/material": "^5.10.8",
+    "@reduxjs/toolkit": "^1.8.5",
+    "awesome-typescript-loader": "^5.2.1",
+    "axios": "^1.3.4",
+    "framer-motion": "^10.1.0",
+    "moment": "^2.29.4",
+    "next": "12.3.1",
+    "next-auth": "^4.12.3",
+    "prettier": "^2.7.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-player": "^2.11.2",
+    "sass": "^1.55.0",
+    "sharp": "^0.31.1",
+    "swiper": "^9.1.0",
+    "typescript": "^4.8.4"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^6.4.0",
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "@types/node": "^18.8.2",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
+    "eslint": "8.24.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "12.3.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  }
+}

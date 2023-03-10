@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Snackbar, Tab, Tabs, styled } from '@mui/material'
+import { Box, Chip, Grid, Skeleton, Snackbar, Tab, Tabs, styled } from '@mui/material'
 import { FC, useContext, useEffect, useState } from 'react'
 
 import { layoutContext } from '@/components/layout/Layout'
@@ -19,6 +19,7 @@ const Root = styled(Grid)(({ theme }) => ({
 }))
 
 export const Home: FC<Props> = (props) => {
+  const [loading, setLoading] = useState<boolean>(true)
   const colorMode = useContext(ColorModeContext)
   const categoryContext = useContext(layoutContext)
   const [data, setData] = useState([])
@@ -30,12 +31,14 @@ export const Home: FC<Props> = (props) => {
   }
 
   useEffect(() => {
+    setLoading(true)
     // For searchbar
     const LSCategory: string = window.localStorage.getItem('youtube_clone') || ''
     LSCategory.length > 0 &&
       handleQuery(`search?part=snippet&q=${LSCategory}`)
         .then((res) => setData(res.items))
         .then(() => window.localStorage.setItem('youtube_clone', ''))
+        .then(() => setLoading(false))
         .catch((error) => console.log(`SHIIIIT! Some things wrong ${error}`))
 
     // For subscription
@@ -45,22 +48,31 @@ export const Home: FC<Props> = (props) => {
       handleQuery(`search?part=snippet&q=${LSCategorySubscription}`)
         .then((res) => setData(res.items))
         .then(() => window.localStorage.setItem('youtube_clone-subscription', ''))
+        .then(() => setLoading(false))
         .catch((error) => console.log(`SHIIIIT! Some things wrong ${error}`))
-
-    handleChannels()
   }, [])
 
   useEffect(() => {
     categoryContext.category.trim().length &&
-      handleQuery(`search?part=snippet&q=${categoryContext.category.toLocaleLowerCase()}`).then((res) =>
-        setData(res.items)
-      )
-    console.log('handleQuery')
+      handleQuery(`search?part=snippet&q=${categoryContext.category.toLocaleLowerCase()}`)
+        .then((res) => setData(res.items))
+        .then(() => setLoading(false))
   }, [categoryContext.category])
 
   useEffect(() => {
     categoryContext.setCategory(demoCategories[value].name)
   }, [value])
+
+  if (loading)
+    return (
+      <Root container className={`${styles.Root}`} rowGap={2.5}>
+        {new Array(10).map((val, idx) => (
+          <Grid item xs={4} key={idx}>
+            <Skeleton variant="rectangular" width="100%" height={515} />
+          </Grid>
+        ))}
+      </Root>
+    )
 
   return (
     <Root container className={`${styles.Root}`} rowGap={2.5}>

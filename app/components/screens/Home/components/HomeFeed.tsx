@@ -1,4 +1,4 @@
-import { Box, Grid, styled } from '@mui/material'
+import { Box, Grid, Skeleton, styled } from '@mui/material'
 import { FC, useEffect, useState } from 'react'
 
 import { HomeFeedChannel, HomeFeedItem } from './index'

@@ -27,3 +27,12 @@ export type PhotoContainerProps = {
   shift?: ImageSProps
   className?: string
 }
+
+export type VideoDetails = {
+  contentDetails: any
+  etag: string
+  id: string
+  kind: 'youtube#video' | 'youtube#playlist' | 'youtube#channel'
+  snippet: any
+  statistics: any
+}

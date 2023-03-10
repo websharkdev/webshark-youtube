@@ -592,7 +592,7 @@ export const lightTheme = createTheme({
       contrastText: '#FFFFFF',
     },
     background: {
-      default: '#EBF3FA',
+      default: '#FFFFFF',
       paper: 'linear-gradient(180deg, #F1F5F8 0%, #EBF3FA 0.01%, #DDE7F3 53.92%, #E6F0F9 100%)',
     },
     text: {

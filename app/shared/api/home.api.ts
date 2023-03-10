@@ -54,3 +54,13 @@ export const handlePlaylists = async (playlistsID: string = 'PLB6wlEeCDJ5Yyh6P2N
 
   return data
 }
+
+export const handleVideoDetails = async (videoID: string) => {
+  const { data }: any = await axios
+    .get(
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoID}&key=AIzaSyATdqsw1lP2jTgZe2rGW2sMhlwbjT6WWOU`
+    )
+    .catch((error) => console.log(`Shiit! Some things wrong ${error}`))
+
+  return data.items[0]
+}

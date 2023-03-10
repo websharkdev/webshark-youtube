@@ -1,5 +1,5 @@
 import { PlaylistPlayRounded as PlaylistPlayRoundedIcon } from '@mui/icons-material'
-import { Box, Chip, Divider, Grid, Tooltip, Typography, styled } from '@mui/material'
+import { Box, Chip, Divider, Grid, Link, SxProps, Tooltip, Typography, styled } from '@mui/material'
 import moment from 'moment'
 import React, { FC, useEffect, useState } from 'react'
 
@@ -8,6 +8,7 @@ import { handlePlaylists } from '@/shared/api/home.api'
 type Props = {
   data: any
   type: 'video' | 'playlist'
+  style?: SxProps
 }
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -39,15 +40,15 @@ const Root = styled(Grid)(({ theme }) => ({
   },
 }))
 
-export const HomeFeedItem: FC<Props> = ({ data, type }) => {
+export const HomeFeedItem: FC<Props> = ({ data, type, style }) => {
   const [playlistData, setPlaylistData] = useState([])
 
   useEffect(() => {
-    type === 'playlist' && handlePlaylists().then((res) => setPlaylistData(res.items))
+    type === 'playlist' && handlePlaylists(data.id.playlistId).then((res) => setPlaylistData(res.items))
   }, [])
 
   return (
-    <Root container direction={'column'} wrap="nowrap" rowSpacing={2}>
+    <Root container direction={'column'} wrap="nowrap" rowSpacing={2} sx={style}>
       <Grid
         item
         xs={12}
@@ -70,7 +71,19 @@ export const HomeFeedItem: FC<Props> = ({ data, type }) => {
         )}
       </Grid>
       <Grid item xs={12}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 1.5 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            rowGap: 1.5,
+            '&:hover': {
+              color: 'text.primary',
+            },
+          }}
+          component={Link}
+          className="unstyled"
+          href={`/video/${data.id.videoId ? data.id.videoId : data.id}`}
+        >
           <Tooltip title={data.snippet.title}>
             <Typography
               variant="h6"

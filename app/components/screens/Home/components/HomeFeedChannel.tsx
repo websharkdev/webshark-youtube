@@ -114,7 +114,7 @@ export const HomeFeedChannel: FC<Props> = ({ id }) => {
                 <StatisticsItem name="Subscribers" count={data?.statistics?.subscriberCount} />
               </Grid>
               <Grid item xs={4}>
-                <StatisticsItem name="View's" count={data?.statistics?.videoCount} />
+                <StatisticsItem name="Video's" count={data?.statistics?.videoCount} />
               </Grid>
               <Grid item xs={4}>
                 <StatisticsItem name="View's" count={data?.statistics?.viewCount} />

@@ -23,7 +23,7 @@ const Root = styled(Grid)(({ theme }) => ({
   padding: theme.spacing(2.5),
   borderRadius: theme.shape.borderRadius,
   display: 'flex',
-  minHeight: 'calc(100vh - 44px)',
+  minHeight: `calc(100vh - ${theme.spacing(2.5 * 2)})`,
   position: 'sticky',
   height: 'max-content',
   top: 22,

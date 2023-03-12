@@ -147,7 +147,7 @@ export const SidebarSimplified: FC<Props> = ({ style }) => {
       <Grid item children={<Divider />} />
 
       <Grid item>
-        <Link href="/" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Link href="/" sx={{ display: 'flex', alignItems: 'center' }} className="unstyled">
           <IconButton className={`header-form--button ${url.asPath === '/' && 'header-form--buttonCurrent'}`}>
             <HomeIcon />
           </IconButton>
@@ -157,7 +157,7 @@ export const SidebarSimplified: FC<Props> = ({ style }) => {
         </Link>
       </Grid>
       <Grid item>
-        <Link href="/trends" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Link href="/trends" sx={{ display: 'flex', alignItems: 'center' }} className="unstyled">
           <IconButton className={`header-form--button ${url.asPath === '/trends' && 'header-form--buttonCurrent'}`}>
             <LocalFireDepartmentIcon />
           </IconButton>
@@ -167,7 +167,11 @@ export const SidebarSimplified: FC<Props> = ({ style }) => {
         </Link>
       </Grid>
       <Grid item>
-        <Link href="https://www.buymeacoffee.com/webshark" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Link
+          href="https://www.buymeacoffee.com/webshark"
+          sx={{ display: 'flex', alignItems: 'center' }}
+          className="unstyled"
+        >
           <IconButton className={`header-form--button ${url.asPath === '/trends' && 'header-form--buttonCurrent'}`}>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path

@@ -7,7 +7,7 @@ import 'swiper/css'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { handlePlaylists, handleQuery, handleVideoDetails } from '@/shared/api/home.api'
-import { useNumbers } from '@/shared/hooks'
+import { useNumbers, useWidth } from '@/shared/hooks'
 import { VideoDetails } from '@/shared/types/home'
 
 import { HomeFeedItem } from '../Home/components'
@@ -51,10 +51,11 @@ const StatisticsItem = ({ name, count }: any) => (
 )
 
 export const PlaylistWrapper: FC<Props> = (props) => {
-  const [like, setLike] = useState<boolean>(false)
+  const currentWidth = useWidth()
   const [data, setData] = useState<VideoDetails>()
   const [related, setRelated] = useState([])
   const [videoID, setVideoID] = useState<string>('')
+  const [swiperSettings, setSwiperSettings] = useState(2)
   const tablet = useMediaQuery((theme) =>
     // @ts-ignore
     theme.breakpoints.down('md')
@@ -73,6 +74,25 @@ export const PlaylistWrapper: FC<Props> = (props) => {
       })
     }
   }, [videoID, url.isReady])
+
+  useEffect(() => {
+    switch (currentWidth) {
+      case 'sm':
+        setSwiperSettings(1)
+        break
+
+      case 'xs':
+        setSwiperSettings(1)
+        break
+      case 'lg':
+        setSwiperSettings(3)
+        break
+
+      default:
+        setSwiperSettings(2)
+        break
+    }
+  }, [currentWidth])
 
   if (data === undefined)
     return (
@@ -123,7 +143,7 @@ export const PlaylistWrapper: FC<Props> = (props) => {
         }}
       >
         {tablet ? (
-          <Swiper spaceBetween={14} slidesPerView={2}>
+          <Swiper spaceBetween={14} slidesPerView={swiperSettings}>
             {related.map((item: any, index: number) => (
               <SwiperSlide
                 key={`${item.id.videoId}_${index}`}

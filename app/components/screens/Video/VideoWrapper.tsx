@@ -6,7 +6,7 @@ import 'swiper/css'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { handleQuery, handleVideoDetails } from '@/shared/api/home.api'
-import { useNumbers } from '@/shared/hooks'
+import { useNumbers, useWidth } from '@/shared/hooks'
 import { VideoDetails } from '@/shared/types/home'
 
 import { HomeFeedItem } from '../Home/components'
@@ -54,11 +54,32 @@ export const VideoWrapper: FC<Props> = (props) => {
   const [data, setData] = useState<VideoDetails>()
   const [related, setRelated] = useState([])
   const [videoID, setVideoID] = useState<string>('')
+  const currentWidth = useWidth()
+  const [swiperSettings, setSwiperSettings] = useState(2)
   const tablet = useMediaQuery((theme) =>
     // @ts-ignore
     theme.breakpoints.down('md')
   )
   const url = useRouter()
+
+  useEffect(() => {
+    switch (currentWidth) {
+      case 'sm':
+        setSwiperSettings(1)
+        break
+
+      case 'xs':
+        setSwiperSettings(1)
+        break
+      case 'lg':
+        setSwiperSettings(3)
+        break
+
+      default:
+        setSwiperSettings(2)
+        break
+    }
+  }, [currentWidth])
 
   useEffect(() => {
     if (url.isReady) {
@@ -88,7 +109,7 @@ export const VideoWrapper: FC<Props> = (props) => {
 
   return (
     <Root container className={`${styles.Root}`} rowGap={2.5} mt={2.5}>
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} lg={8} xl={9}>
         <Grid container rowGap={2.5}>
           <Grid item xs={12}>
             <iframe
@@ -162,7 +183,8 @@ export const VideoWrapper: FC<Props> = (props) => {
       <Grid
         item
         xs={12}
-        md={3}
+        lg={4}
+        xl={3}
         className="video-wrapper--scrollable"
         sx={{
           px: { xs: 0, md: 2.5 },
@@ -172,7 +194,7 @@ export const VideoWrapper: FC<Props> = (props) => {
         }}
       >
         {tablet ? (
-          <Swiper spaceBetween={14} slidesPerView={2}>
+          <Swiper spaceBetween={14} slidesPerView={swiperSettings}>
             {related.map((item: any, index: number) => (
               <SwiperSlide
                 key={`${item.id.videoId}_${index}`}

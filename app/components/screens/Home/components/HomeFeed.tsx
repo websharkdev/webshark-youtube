@@ -18,7 +18,7 @@ export const HomeFeed: FC<Props> = ({ data }) => {
           xs={12}
           sm={6}
           lg={4}
-          key={`${item.id.videoId}_${index}`}
+          key={`${item.id.videoId ? item.id.videoId : item.id.channelId}_${index}`}
           sx={{
             display: 'flex',
             justifyContent: 'center',

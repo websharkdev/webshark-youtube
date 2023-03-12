@@ -1,8 +1,7 @@
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { useEffect } from 'react'
-import { FC, ReactElement, createContext, useMemo, useState } from 'react'
+import { FC, ReactElement, createContext, useEffect, useMemo, useState } from 'react'
 
 import { darkTheme, lightTheme } from './theme'
 

@@ -2,10 +2,11 @@ import { ThumbUpOutlined as ThumbUpOutlinedIcon, ThumbUpRounded as ThumbUpRounde
 import { Box, Divider, Grid, IconButton, Typography, styled, useMediaQuery } from '@mui/material'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useState } from 'react'
+// Import Swiper styles
 import 'swiper/css'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { handleQuery, handleVideoDetails } from '@/shared/api/home.api'
+import { handlePlaylists, handleQuery, handleVideoDetails } from '@/shared/api/home.api'
 import { useNumbers } from '@/shared/hooks'
 import { VideoDetails } from '@/shared/types/home'
 
@@ -24,7 +25,7 @@ const Root = styled(Grid)(({ theme }) => ({
     aspectRatio: '16/9',
     border: 'none',
   },
-  '& .video-wrapper--title, .video-wrapper--channelTitle': {
+  '& .video-wrapper--title': {
     color: theme.palette.text.primary,
   },
   '& .video-wrapper--description': {
@@ -49,7 +50,7 @@ const StatisticsItem = ({ name, count }: any) => (
   </Box>
 )
 
-export const VideoWrapper: FC<Props> = (props) => {
+export const PlaylistWrapper: FC<Props> = (props) => {
   const [like, setLike] = useState<boolean>(false)
   const [data, setData] = useState<VideoDetails>()
   const [related, setRelated] = useState([])
@@ -66,15 +67,9 @@ export const VideoWrapper: FC<Props> = (props) => {
       const id = url.query.slug.toLocaleString()
       setVideoID(id)
 
-      handleVideoDetails(id).then((res) => {
-        setData(res)
-        handleQuery(
-          `search?part=snippet&q=${res.snippet.tags ? res.snippet.tags[3] : res.snippet.channelTitle}`,
-          25
-        ).then((res) => {
-          const sameVideo = res.items.filter((item: any) => item.snippet.title !== data?.snippet.title)
-          setRelated(sameVideo.slice(1))
-        })
+      handlePlaylists(id).then((res) => {
+        setData(res.items[0])
+        setRelated(res.items.slice(1))
       })
     }
   }, [videoID, url.isReady])
@@ -88,13 +83,13 @@ export const VideoWrapper: FC<Props> = (props) => {
 
   return (
     <Root container className={`${styles.Root}`} rowGap={2.5} mt={2.5}>
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} lg={9}>
         <Grid container rowGap={2.5}>
           <Grid item xs={12}>
             <iframe
               width="100%"
               className="video-wrapper--iframe"
-              src={`https://www.youtube.com/embed/${videoID}`}
+              src={`https://www.youtube.com/embed/${data.contentDetails.videoId}`}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
@@ -106,69 +101,25 @@ export const VideoWrapper: FC<Props> = (props) => {
               {data.snippet.title}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body2" className="video-wrapper--channelTitle">
-              {data.snippet.channelTitle}
-            </Typography>
-          </Grid>
           <Grid item xs={12} children={<Divider />} />
 
           <Grid item xs={12}>
-            <Grid container columnGap={{ xs: 1, md: 1.5 }} rowGap={2.5} wrap={tablet ? 'wrap' : 'nowrap'}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body2" className="video-wrapper--description">
-                  {data.snippet.description}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    columnGap: 2.5,
-                    rowGap: 2.5,
-                    flexWrap: 'nowrap',
-                    width: '100%',
-                    justifyContent: 'space-between',
-                    px: { xs: 0, md: 2.5 },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      columnGap: 2.5,
-                      rowGap: 2.5,
-                      flexWrap: 'nowrap',
-                    }}
-                  >
-                    {!tablet && (
-                      <IconButton className="like" onClick={() => setLike(!like)}>
-                        {like ? <ThumbUpRoundedIcon /> : <ThumbUpOutlinedIcon />}
-                      </IconButton>
-                    )}
-                    <StatisticsItem name="Likes" count={data.statistics.likeCount} />
-                  </Box>
-                  {data.statistics.commentCount ? (
-                    <StatisticsItem name="Comments" count={data.statistics.commentCount} />
-                  ) : null}
-                  <StatisticsItem name="View's" count={data.statistics.viewCount} />
-                </Box>
-              </Grid>
-            </Grid>
+            <Typography variant="body2" className="video-wrapper--description">
+              {data.snippet.description}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid
         item
         xs={12}
-        md={3}
+        lg={3}
         className="video-wrapper--scrollable"
         sx={{
           px: { xs: 0, md: 2.5 },
-          mt: { xs: 2.5, md: 0 },
-          overflowY: 'scroll',
-          maxHeight: '80vh',
+          overflowX: 'scroll',
+          maxHeight: '100vw',
+          display: 'flex',
         }}
       >
         {tablet ? (
@@ -190,6 +141,7 @@ export const VideoWrapper: FC<Props> = (props) => {
                 <HomeFeedItem
                   data={item}
                   type={item.id.kind ? item.id.kind.slice(8) : item.kind.slice(8)}
+                  videoID={item.contentDetails.videoId}
                   style={{
                     minHeight: 'max-content',
                     // @ts-ignore
@@ -220,6 +172,7 @@ export const VideoWrapper: FC<Props> = (props) => {
                 <HomeFeedItem
                   data={item}
                   type={item.id.kind ? item.id.kind.slice(8) : item.kind.slice(8)}
+                  videoID={item.contentDetails.videoId}
                   style={{
                     minHeight: 'max-content',
                     // @ts-ignore

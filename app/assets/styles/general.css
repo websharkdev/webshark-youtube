@@ -9,15 +9,28 @@ body::-webkit-scrollbar {
 }
 
 
-.video-wrapper--scrollable::-webkit-scrollbar .sidebar-subscriptions--wrapperScrollable::-webkit-scrollbar {
+.sidebar-subscriptions--wrapperScrollable::-webkit-scrollbar {
     width: 6px;
 }
 
-.video-wrapper--scrollable::-webkit-scrollbar-track .sidebar-subscriptions--wrapperScrollable::-webkit-scrollbar-track {
+.sidebar-subscriptions--wrapperScrollable::-webkit-scrollbar-track {
     border-radius: 4px;
 }
 
-.video-wrapper--scrollable::-webkit-scrollbar-thumb .sidebar-subscriptions--wrapperScrollable::-webkit-scrollbar-thumb {
+.sidebar-subscriptions--wrapperScrollable::-webkit-scrollbar-thumb {
+    background: #D9D9D9;
+    border-radius: 40px;
+}
+
+.video-wrapper--scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.video-wrapper--scrollable::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+.video-wrapper--scrollable::-webkit-scrollbar-thumb {
     background: #D9D9D9;
     border-radius: 40px;
 }
@@ -66,7 +79,8 @@ html,
     aspect-ratio: 16/9;
 }
 
-.feed-item--description {
+.feed-item--description,
+.video-wrapper--description {
     display: -webkit-box;
     hyphens: manual;
     text-align: left;
@@ -75,7 +89,16 @@ html,
     overflow: hidden;
 }
 
-.feed-item--title {
+@media (max-width: 998px) {
+
+    .feed-item--description,
+    .video-wrapper--description {
+        -webkit-line-clamp: 4;
+    }
+}
+
+.feed-item--title,
+.feed-item--playlistDescription {
     display: -webkit-box;
     hyphens: manual;
     text-align: left;

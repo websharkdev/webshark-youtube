@@ -9,10 +9,10 @@ type Props = {
   id: string
 }
 const Root = styled(Grid)(({ theme }) => ({
-  background: '#fff',
+  background: theme.palette.background.default,
   padding: theme.spacing(2.5),
   borderRadius: theme.shape.borderRadius,
-  minHeight: 445,
+  minHeight: 400,
   height: 'max-content',
   overflow: 'hidden',
   '& .feed-item--imageWrapper': {
@@ -54,10 +54,16 @@ const Root = styled(Grid)(({ theme }) => ({
       },
     },
   },
+  '& .feed-item--title': {
+    color: theme.palette.secondary.dark,
+  },
+  '& .feed-item--description': {
+    color: theme.palette.secondary.dark,
+  },
 }))
 
 const StatisticsItem = ({ name, count }: any) => (
-  <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 0.2 }}>
+  <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 0.2, color: 'text.secondary' }}>
     <Typography variant="body2" width="100%" className="feed-item--statistic_title">
       {name}
     </Typography>

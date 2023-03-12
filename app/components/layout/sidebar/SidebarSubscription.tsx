@@ -22,7 +22,7 @@ const Root = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     flexDirection: 'column',
     borderRadius: 14,
-    background: '#f5f5f5',
+    background: theme.palette.secondary.main,
     overflow: 'hidden',
     '& *': {
       aspectRatio: '1/1',

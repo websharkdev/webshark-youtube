@@ -1,15 +1,12 @@
-import {
-  Home as HomeIcon,
-  LocalFireDepartment as LocalFireDepartmentIcon,
-  Search as SearchIcon,
-} from '@mui/icons-material'
-import { Box, FormControl, Grid, IconButton, Link, Paper, Switch, TextField, styled } from '@mui/material'
+import { Home as HomeIcon, LocalFireDepartment as LocalFireDepartmentIcon } from '@mui/icons-material'
+import { Box, Grid, IconButton, Link, Switch, styled, useMediaQuery } from '@mui/material'
 import { useRouter } from 'next/router'
-import { FC, SyntheticEvent, useContext, useState } from 'react'
+import { FC, useContext } from 'react'
 
 import { ColorModeContext } from '@/providers/customThemeProvider/CustomThemeProvider'
 
 import { layoutContext } from '../Layout'
+import { Search } from '../search'
 
 import { data } from './data'
 
@@ -22,50 +19,48 @@ const Root = styled(Grid)(({ theme }) => ({
   flexWrap: 'nowrap',
   padding: theme.spacing(2.5),
   position: 'relative',
-  background: '#fff',
-  borderRadius: theme.shape.borderRadius,
+  background: theme.palette.background.default,
   zIndex: 30,
+  [theme.breakpoints.up('md')]: {
+    borderRadius: theme.shape.borderRadius,
+  },
   '& .header-wrapper--actions': {
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     background: 'none',
     width: '100%',
     height: '100%',
     minHeight: 48,
-
-    '& .header-form--button': {
-      minWidth: 48,
-      minHeight: 48,
-      background: '#f3f3f3',
-      borderRadius: theme.shape.borderRadius,
-      width: 'max-content',
-      height: 'max-content',
-      '&.header-form--buttonCurrent': {
-        background: '#FDE8E5',
-        color: '#DE0203',
-      },
-    },
-    '& .header-form--search': {
-      display: 'flex',
+    [theme.breakpoints.up('md')]: {
       justifyContent: 'space-between',
+    },
+  },
+  '& .header-form--button': {
+    minWidth: 48,
+    minHeight: 48,
+    color: theme.palette.text.secondary,
+    background: theme.palette.secondary.main,
+    borderRadius: theme.shape.borderRadius,
+    width: 'max-content',
+    height: 'max-content',
+    '&.header-form--buttonCurrent': {
+      background: '#FDE8E5',
+      color: '#DE0203',
+    },
+  },
+  '& .header-menu--item': {
+    [theme.breakpoints.down('md')]: {
+      display: 'flex',
+      justifyContent: 'center',
       alignItems: 'center',
-      background: 'none',
-      width: '100%',
-      height: '100%',
-      minHeight: 48,
-      '& .header-form--field': {
-        minHeight: 48,
-        width: '100%',
-        color: '#111',
-        padding: `${theme.spacing(1.5)} ${theme.spacing(2)}`,
-        background: '#f3f3f3',
-        border: 'none',
-        outline: 'none',
-        borderRadius: theme.shape.borderRadius,
-        '&:placeholder': {
-          color: '#ccc',
-        },
+      flexDirection: 'column',
+      color: theme.palette.text.secondary,
+      background: theme.palette.secondary.main,
+      borderRadius: theme.shape.borderRadius,
+      width: 48,
+      height: 48,
+      '& svg path:last-child': {
+        stroke: theme.palette.secondary.dark,
       },
     },
   },
@@ -74,70 +69,70 @@ const Root = styled(Grid)(({ theme }) => ({
 export const Header: FC<Props> = () => {
   const url = useRouter()
   const colorMode = useContext(ColorModeContext)
-  const categoryContext = useContext(layoutContext)
-  const [searchRequest, setSearchRequest] = useState<string>('')
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault()
-    url.asPath !== '/'
-      ? url.push('/').then(() => {
-          window.localStorage.setItem('youtube_clone', searchRequest)
-          categoryContext.setCategory(searchRequest)
-        })
-      : searchRequest !== ''
-      ? categoryContext.setCategory(searchRequest)
-      : null
+  const homeContext = useContext(layoutContext)
 
-    window.localStorage.setItem('youtube_clone', searchRequest)
-    setSearchRequest('')
-  }
+  const tablet = useMediaQuery((theme) =>
+    // @ts-ignore
+    theme.breakpoints.down('md')
+  )
 
   return (
     <Root container columnGap={2.5}>
-      <Grid item xs={5}>
-        <Box className="header-wrapper--actions" sx={{ columnGap: 1.5 }}>
-          <IconButton href="/" className={`header-form--button ${url.asPath === '/' && 'header-form--buttonCurrent'}`}>
-            <HomeIcon />
-          </IconButton>
-          <IconButton
-            href="/trends"
-            className={`header-form--button ${url.asPath === '/trends' && 'header-form--buttonCurrent'}`}
-          >
-            <LocalFireDepartmentIcon />
-          </IconButton>
-          <Box component={'form'} sx={{ columnGap: 1.5 }} className="header-form--search" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={searchRequest}
-              className="header-form--field"
-              onChange={(e) => setSearchRequest(e.target.value)}
-              placeholder="Search..."
-              id="searchbar"
-            />
-            <IconButton type="submit" className="header-form--button">
-              <SearchIcon />
+      {!tablet && (
+        <Grid item xs={6}>
+          <Box className="header-wrapper--actions" sx={{ columnGap: 1.5 }}>
+            <IconButton
+              href="/"
+              className={`header-form--button ${url.asPath === '/' && 'header-form--buttonCurrent'}`}
+            >
+              <HomeIcon />
             </IconButton>
+            <IconButton
+              href="/trends"
+              className={`header-form--button ${url.asPath === '/trends' && 'header-form--buttonCurrent'}`}
+            >
+              <LocalFireDepartmentIcon />
+            </IconButton>
+            <Search />
           </Box>
-        </Box>
-      </Grid>
-      <Grid item flex={1} className="header-menu--listMenu">
-        <Grid container columnSpacing={6} justifyContent="flex-end" alignItems="center">
-          {data.menu.map((item) => (
-            <Grid item xs={'auto'} key={item.id} className={`header-menu--item`}>
-              <Link href={item.href}>{item.name}</Link>
-            </Grid>
-          ))}
         </Grid>
-      </Grid>
-      <Grid item>
-        <Switch
-          aria-label="password-rule-switch"
-          checked={colorMode.mode === 'light' ? true : false}
-          onChange={() => {
-            colorMode.toggleColorMode()
-          }}
-          color="default"
-        />
-      </Grid>
+      )}
+      {!tablet && (
+        <Grid item flex={1} className="header-menu--listMenu">
+          <Grid container columnGap={{ xs: 0, md: 6 }} justifyContent="flex-end" alignItems="center">
+            {data.menu.map((item) => (
+              <Grid item xs={'auto'} key={item.id} className={`header-menu--item`}>
+                <Link href={item.href}>{item.name}</Link>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      )}
+      {tablet && (
+        <Grid item xs={6}>
+          <Search />
+        </Grid>
+      )}
+      {tablet ? (
+        <IconButton className="header-menu--burger header-form--button" onClick={() => homeContext.setBurgerMenu(true)}>
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 2V0H18V2H0Z" fill="currentColor" />
+            <path d="M0 8V6H18V8H0Z" fill="currentColor" />
+            <path d="M0 14V12H18V14H0Z" fill="currentColor" />
+          </svg>
+        </IconButton>
+      ) : (
+        <Grid item>
+          <Switch
+            aria-label="password-rule-switch"
+            checked={colorMode.mode === 'light' ? true : false}
+            onChange={() => {
+              colorMode.toggleColorMode()
+            }}
+            color="default"
+          />
+        </Grid>
+      )}
     </Root>
   )
 }

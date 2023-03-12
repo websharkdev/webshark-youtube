@@ -1,11 +1,11 @@
-import { Box, Chip, Grid, Skeleton, Snackbar, Tab, Tabs, styled } from '@mui/material'
+import { Grid, Skeleton, Tab, Tabs, Typography, styled, useMediaQuery } from '@mui/material'
 import { FC, useContext, useEffect, useState } from 'react'
 
 import { layoutContext } from '@/components/layout/Layout'
 
 import styles from '@/screens/Home/home.module.sass'
 
-import { handleChannels, handleQuery } from '@/shared/api/home.api'
+import { handleQuery } from '@/shared/api/home.api'
 
 import { ColorModeContext } from '@/providers/customThemeProvider/CustomThemeProvider'
 
@@ -15,7 +15,29 @@ import { demoCategories } from './data'
 type Props = {}
 
 const Root = styled(Grid)(({ theme }) => ({
-  paddingTop: theme.spacing(2),
+  [theme.breakpoints.up('md')]: {
+    paddingTop: theme.spacing(2),
+  },
+  '& .home-tabs--wrapper': {
+    padding: `${theme.spacing(1.5)} ${theme.spacing(2)}`,
+    background: theme.palette.background.default,
+    borderRadius: theme.shape.borderRadius,
+    '& .home-tabs--wrapper-item': {
+      borderRadius: theme.shape.borderRadius,
+      background: theme.palette.secondary.main,
+
+      '&.Mui-selected': {
+        background: theme.palette.secondary.dark,
+      },
+    },
+    '& .MuiTabScrollButton-root': {
+      color: theme.palette.text.secondary,
+
+      '&.Mui-disabled': {
+        opacity: 0.6,
+      },
+    },
+  },
 }))
 
 export const Home: FC<Props> = (props) => {
@@ -29,6 +51,11 @@ export const Home: FC<Props> = (props) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
+
+  const tablet = useMediaQuery((theme) =>
+    // @ts-ignore
+    theme.breakpoints.down('md')
+  )
 
   useEffect(() => {
     setLoading(true)
@@ -65,7 +92,7 @@ export const Home: FC<Props> = (props) => {
 
   if (loading)
     return (
-      <Root container className={`${styles.Root}`} rowGap={2.5}>
+      <Root container className={`${styles.Root} home-theme--${colorMode.mode}`} rowGap={2.5}>
         {new Array(10).map((val, idx) => (
           <Grid item xs={4} key={idx}>
             <Skeleton variant="rectangular" width="100%" height={515} />
@@ -75,20 +102,28 @@ export const Home: FC<Props> = (props) => {
     )
 
   return (
-    <Root container className={`${styles.Root}`} rowGap={2.5}>
-      <Grid item xs={12}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
-        >
-          {demoCategories.map((category: any) => (
-            <Tab title={category.name} label={category.name} key={category.id} className="home-tab--item" />
-          ))}
-        </Tabs>
-      </Grid>
+    <Root container className={styles.Root} rowGap={{ xs: 0, md: 2.5 }}>
+      {!tablet && (
+        <Grid item xs={12}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            className="home-tabs--wrapper"
+            aria-label="scrollable auto tabs example"
+          >
+            {demoCategories.map((category: any) => (
+              <Tab
+                className="home-tabs--wrapper-item"
+                title={category.name}
+                label={<Typography variant="body2">{category.name}</Typography>}
+                key={category.id}
+              />
+            ))}
+          </Tabs>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <HomeFeed data={data} />
       </Grid>

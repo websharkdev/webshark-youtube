@@ -1,28 +1,30 @@
 import { PlaylistPlayRounded as PlaylistPlayRoundedIcon } from '@mui/icons-material'
 import { Box, Chip, Divider, Grid, Link, SxProps, Tooltip, Typography, styled } from '@mui/material'
 import moment from 'moment'
+import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
 
 import { handlePlaylists } from '@/shared/api/home.api'
 
 type Props = {
   data: any
-  type: 'video' | 'playlist'
+  type: 'video' | 'playlist' | 'playlistItem'
   style?: SxProps
+  videoID?: string
 }
 
 const Root = styled(Grid)(({ theme }) => ({
-  background: '#fff',
+  background: theme.palette.background.default,
   padding: theme.spacing(2.5),
   borderRadius: theme.shape.borderRadius,
-  minHeight: 445,
+  minHeight: 400,
   height: 'max-content',
   overflow: 'hidden',
   '& .feed-item--playlistWrapper': {
     position: 'absolute',
     right: 0,
     top: 0,
-    background: 'linear-gradient(270deg, #4F4F4F 62.61%, rgba(79, 79, 79, 0) 160%)',
+    background: 'rgba(17, 16, 16, 0.64)',
     width: '25%',
     height: '100%',
     display: 'flex',
@@ -31,16 +33,19 @@ const Root = styled(Grid)(({ theme }) => ({
     alignItems: 'center',
     flexDirection: 'column',
   },
+  '& .feed-item--playlistDescription, .feed-item--description, .feed-item--publishedAt': {
+    color: theme.palette.text.secondary,
+  },
   '& .feed-item--image': {
     aspectRatio: '16/9',
     width: '100%',
-    background: '#ccc',
     borderRadius: theme.shape.borderRadius,
     objectFit: 'cover',
   },
 }))
 
-export const HomeFeedItem: FC<Props> = ({ data, type, style }) => {
+export const HomeFeedItem: FC<Props> = ({ data, type, style, videoID }) => {
+  const url = useRouter()
   const [playlistData, setPlaylistData] = useState([])
 
   useEffect(() => {
@@ -82,7 +87,13 @@ export const HomeFeedItem: FC<Props> = ({ data, type, style }) => {
           }}
           component={Link}
           className="unstyled"
-          href={`/video/${data.id.videoId ? data.id.videoId : data.id}`}
+          href={
+            type === 'video' || type === 'playlistItem'
+              ? `/video/${data.id.videoId ? data.id.videoId : videoID}`
+              : type === 'playlist'
+              ? `/playlist/${data.id.playlistId}`
+              : ''
+          }
         >
           <Tooltip title={data.snippet.title}>
             <Typography
@@ -99,7 +110,7 @@ export const HomeFeedItem: FC<Props> = ({ data, type, style }) => {
                 {data.snippet.channelTitle}
               </Typography>
             </Tooltip>
-            {data.snippet.liveBroadcastContent.toLowerCase() === 'live' && (
+            {data.snippet.liveBroadcastContent?.toLowerCase() === 'live' && (
               <Chip label={`${data.snippet.liveBroadcastContent} Now`} className="feed-item--live" />
             )}
           </Box>
@@ -107,16 +118,22 @@ export const HomeFeedItem: FC<Props> = ({ data, type, style }) => {
       </Grid>
       {type === 'playlist' && (
         <Grid item xs={12}>
-          {playlistData.map((item: any) => <Typography variant="body2">• {item.snippet.title}</Typography>).slice(0, 2)}
+          {playlistData
+            .map((item: any) => (
+              <Typography variant="body2" className="feed-item--playlistDescription" key={item.id}>
+                • {item.snippet.title}
+              </Typography>
+            ))
+            .slice(0, 2)}
         </Grid>
       )}
-      {type === 'video' && (
+      {type === 'video' || 'playlistItem' ? (
         <Grid item xs={12}>
           <Typography variant="body2" width="100%" className="feed-item--description">
             {data.snippet.description}
           </Typography>
         </Grid>
-      )}
+      ) : null}
       <Grid item xs={12}>
         <Typography variant="body2" width="100%" className="feed-item--publishedAt">
           {moment(data.snippet.publishedAt).fromNow()}

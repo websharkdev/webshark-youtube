@@ -172,7 +172,7 @@ export const SidebarSimplified: FC<Props> = ({ style }) => {
           sx={{ display: 'flex', alignItems: 'center' }}
           className="unstyled"
         >
-          <IconButton className={`header-form--button ${url.asPath === '/trends' && 'header-form--buttonCurrent'}`}>
+          <IconButton className='header-form--button'>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M18.1785 25.4286C18.6902 24.4053 19.4152 16.7508 20.2089 15.3978C20.2706 15.2927 20.3255 15.163 20.2237 15.096C19.589 14.6779 16.0457 15.0023 14.9616 15.8523C14.2172 16.4361 12.8949 16.3667 11.9504 16.1855C11.6218 16.1225 11.3046 16.3917 11.3459 16.7238C11.697 19.5428 12.2236 24.2989 12.6168 25.0625C13.3571 26.5 17.6428 26.5 18.1785 25.4286Z"
@@ -187,7 +187,7 @@ export const SidebarSimplified: FC<Props> = ({ style }) => {
             </svg>
           </IconButton>
           <Typography variant="body2" ml={2.5}>
-            Trends
+            Buy Me A coffe
           </Typography>
         </Link>
       </Grid>

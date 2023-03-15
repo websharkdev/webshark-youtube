@@ -152,7 +152,7 @@ export const Sidebar: FC<Props> = ({ style }) => {
           className="unstyled"
         >
           <IconButton
-            className={`sidebar-burger--button ${url.asPath === '/trends' && 'sidebar-burger--buttonCurrent'}`}
+            className='sidebar-burger--button'
           >
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -168,7 +168,7 @@ export const Sidebar: FC<Props> = ({ style }) => {
             </svg>
           </IconButton>
           <Typography variant="body2" ml={2.5}>
-            Trends
+            Buy Me A Coffe
           </Typography>
         </Link>
       </Grid>
